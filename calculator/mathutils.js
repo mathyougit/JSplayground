@@ -48,6 +48,19 @@ const terminate = (err) => {
   console.log('calculator terminated:', err)
 }
 
+const matchp = (arr) => {
+  let opencount = 1
+  let closedcount = 0
+  for (let x = 0; x < arr.length; ++x) {
+    if ( arr[x] === '(' ) {
+      ++opencount
+    } else if ( arr[x] === ')') {
+      ++closedcount
+    }
+    if (opencount === closedcount) return x;
+  }
+}
+
 const mathnums = (arr) => {
 
   let nexte = arr.indexOf('^') === -1 ? undefined : arr.indexOf('^') 
@@ -55,12 +68,29 @@ const mathnums = (arr) => {
   let nextm = arr.indexOf('*') === -1 ? undefined : arr.indexOf('*')
   let nexta = arr.indexOf('+') === -1 ? undefined : arr.indexOf('+')
   let nexts = arr.indexOf('-') === -1 ? undefined : arr.indexOf('-')
+  let nextop = arr.indexOf('(') === -1 ? undefined : arr.indexOf('(')
+  let nextcp = arr.indexOf(')') === -1 ? undefined : arr.indexOf(')')
   
   let i = -1
   let j = undefined
-  let rarr = arr
 
-  if (nexte) {
+  if (nextop) {
+    if ((arr.slice(nextop,nextcp)).length === 3) {
+      arr.splice(nextop, 1)
+      arr.splice(nextcp-1,1)
+      return arr
+    } else {
+      i = nextop
+      let tarr = [...arr]
+      tarr.splice(0, i + 1)
+      let closingp = matchp(tarr)
+      let temparr = [...arr]
+      temparr.splice(0, i + 1)
+      temparr.splice(closingp, temparr.length - closingp)
+      arr.splice(i, i + closingp,...mathnums(temparr))
+      return arr
+    }
+  } else if (nexte) {
     i = nexte
     j = expnums(arr[i-1], arr[i+1])
   } else if (nextm < nextd || nextm && !nextd) {
@@ -77,23 +107,19 @@ const mathnums = (arr) => {
     j = subnums(arr[i-1], arr[i+1])
   }
     
-  rarr = arr.splice(i-1, 3)
-  rarr = arr.splice(i-1,0,j)
+  arr.splice(i-1, 3)
+  arr.splice(i-1,0,j)
 
-//  uncomment to see math steps 
-//  console.log(arr)
-
-  return(arr)
+  return arr
 
 }
 
 const calculate = (iarr) => {
-  let narr = iarr
+  let narr = [...iarr]
   while (narr.length>1) {
     narr = mathnums(narr)
   }
-  const oarr = narr
-  return oarr
+  return narr
 }
 
 module.exports = calculate

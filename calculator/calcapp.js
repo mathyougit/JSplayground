@@ -16,9 +16,12 @@ if (!inputString) {
   
   const inputArray = createarr(inputString)
 
+  
   const outputArray = calculate(inputArray)
-
+  
   console.log('Calculate:', inputString)
+  
+  console.log('As Array:', inputArray)
 
   console.log('Result:', outputArray)
 
