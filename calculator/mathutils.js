@@ -1,4 +1,6 @@
-// Simple caluculator-math functions
+// Math utilities
+// Notes:
+// How to terminate calculation if error? (i.e. divide by 0)
 
 const addnums = (a, b) => {
   c = a + b
@@ -26,23 +28,6 @@ const expnums = (a, b) => {
   c = a ** b
   return c
 }
-
-
-// const mathnums = (sym) => {
-//   if (isNaN(sym)){
-//     if (sym === '*') {
-//       mulnums()
-//     } else if (sym === '/') {
-//       divnums()
-//     } else if (sym === '+') {
-//       addnums()
-//     } else if (sym === '-') {
-//       subnums()
-//     } else if (sym === '^') {
-//       expnums()
-//     }
-//   }
-// }
 
 const terminate = (err) => {
   console.log('calculator terminated:', err)
@@ -74,7 +59,7 @@ const mathnums = (arr) => {
   let i = -1
   let j = undefined
 
-  if (nextop) {
+  if (nextop!==undefined) {
     if ((arr.slice(nextop,nextcp)).length === 3) {
       arr.splice(nextop, 1)
       arr.splice(nextcp-1,1)
@@ -87,10 +72,15 @@ const mathnums = (arr) => {
       let temparr = [...arr]
       temparr.splice(0, i + 1)
       temparr.splice(closingp, temparr.length - closingp)
-      arr.splice(i, i + closingp,...mathnums(temparr))
-      return arr
+      if (i === 0) {
+        arr.splice(i, i + 1 + closingp,...mathnums(temparr))
+        return arr 
+      } else {
+          arr.splice(i, i + closingp,...mathnums(temparr))
+          return arr 
+      }
     }
-  } else if (nexte) {
+  } else if (nexte!==undefined) {
     i = nexte
     j = expnums(arr[i-1], arr[i+1])
   } else if (nextm < nextd || nextm && !nextd) {

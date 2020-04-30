@@ -1,24 +1,10 @@
-// const mathsyms = {
-//   add: '+',
-//   subtract: '-',
-//   divide: '/',
-//   multiply: '*',
-//   open: "(",
-//   close: ")"
-//   exp : "^"
-// }
-
-// let symbols = []
-// for (const sym in mathsyms) {
-//   symbols.push('\\' + mathsyms[sym])
-// }
-
+// String parsing utilities
 
 const cleanstr = (str) => {
   let cleaning = str.replace(/\s+/g, '')
   cleaning = cleaning.replace(/\-\-/g, '+')
   cleaning = cleaning.replace(/\+\-/g,'-')
-  const cleaned = cleaning.replace(/(?<=\W)\+/g,'')
+  const cleaned = cleaning.replace(/(?<=\W^\))\+/g,'')
   return cleaned
 }
 
