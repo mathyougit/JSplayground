@@ -8,7 +8,7 @@ const calculate = require('./mathutils')
 
 // const inputString = process.argv[2]
 
-const inputString = '5*(3-4)^2+2^2'
+const inputString = '5*((3-4)^2)+2^2'
 
 if (!inputString) {
 

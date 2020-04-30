@@ -34,7 +34,7 @@ const terminate = (err) => {
 }
 
 const matchp = (arr) => {
-  let opencount = 1
+  let opencount = 0
   let closedcount = 0
   for (let x = 0; x < arr.length; ++x) {
     if ( arr[x] === '(' ) {
@@ -67,18 +67,22 @@ const mathnums = (arr) => {
     } else {
       i = nextop
       let tarr = [...arr]
-      tarr.splice(0, i + 1)
+      tarr.splice(0, i)
       let closingp = matchp(tarr)
-      let temparr = [...arr]
-      temparr.splice(0, i + 1)
-      temparr.splice(closingp, temparr.length - closingp)
-      if (i === 0) {
-        arr.splice(i, i + 1 + closingp,...mathnums(temparr))
-        return arr 
-      } else {
-          arr.splice(i, i + closingp,...mathnums(temparr))
-          return arr 
-      }
+
+      // maybe unnecesary? just use tarr
+
+      // let temparr = [...arr]
+      // temparr.splice(0, i + 1)
+      // temparr.splice(closingp, temparr.length - closingp)
+      
+      // to here
+
+      tarr.splice(closingp, tarr.length - closingp)
+      tarr.splice(0,1)
+
+      arr.splice(i, i + closingp + 1,...mathnums(tarr))
+ 
     }
   } else if (nexte!==undefined) {
     i = nexte
