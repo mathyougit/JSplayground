@@ -15,7 +15,6 @@ const subnums = (a, b) => {
 const divnums = (a, b) => {
   c = b !== 0 ? a / b : 'cannot divide by 0'
   if (typeof(c) !== 'number') terminate(c)
-  // should this still return c?
   return c
 }
 
@@ -48,17 +47,12 @@ const matchp = (arr) => {
 
 const mathnums = (arr) => {
 
-  let nexte = arr.indexOf('^') === -1 ? undefined : arr.indexOf('^') 
-  let nextd = arr.indexOf('/') === -1 ? undefined : arr.indexOf('/')
-  let nextm = arr.indexOf('*') === -1 ? undefined : arr.indexOf('*')
-  let nexta = arr.indexOf('+') === -1 ? undefined : arr.indexOf('+')
-  let nexts = arr.indexOf('-') === -1 ? undefined : arr.indexOf('-')
-  let nextop = arr.indexOf('(') === -1 ? undefined : arr.indexOf('(')
-  let nextcp = arr.indexOf(')') === -1 ? undefined : arr.indexOf(')')
-  
-  let i = -1
+  let i = undefined
   let j = undefined
 
+  let nextop = arr.indexOf('(') === -1 ? undefined : arr.indexOf('(')
+  let nextcp = arr.indexOf(')') === -1 ? undefined : arr.indexOf(')')
+    
   if (nextop!==undefined) {
     if ((arr.slice(nextop,nextcp)).length === 3) {
       arr.splice(nextop, 1)
@@ -69,22 +63,20 @@ const mathnums = (arr) => {
       let tarr = [...arr]
       tarr.splice(0, i)
       let closingp = matchp(tarr)
-
-      // maybe unnecesary? just use tarr
-
-      // let temparr = [...arr]
-      // temparr.splice(0, i + 1)
-      // temparr.splice(closingp, temparr.length - closingp)
-      
-      // to here
-
       tarr.splice(closingp, tarr.length - closingp)
       tarr.splice(0,1)
-
-      arr.splice(i, i + closingp + 1,...mathnums(tarr))
- 
+      arr.splice(i, closingp + 1,...calculate(tarr))
+      return arr
     }
-  } else if (nexte!==undefined) {
+  } 
+
+  let nexte = arr.indexOf('^') === -1 ? undefined : arr.indexOf('^') 
+  let nextd = arr.indexOf('/') === -1 ? undefined : arr.indexOf('/')
+  let nextm = arr.indexOf('*') === -1 ? undefined : arr.indexOf('*')
+  let nexta = arr.indexOf('+') === -1 ? undefined : arr.indexOf('+')
+  let nexts = arr.indexOf('-') === -1 ? undefined : arr.indexOf('-')
+  
+  if (nexte!==undefined) {
     i = nexte
     j = expnums(arr[i-1], arr[i+1])
   } else if (nextm < nextd || nextm && !nextd) {
@@ -100,13 +92,14 @@ const mathnums = (arr) => {
     i = nexts
     j = subnums(arr[i-1], arr[i+1])
   }
-    
-  arr.splice(i-1, 3)
-  arr.splice(i-1,0,j)
+  
+  if (i!==undefined) {
+  arr.splice(i-1, 3, j)
+  }
 
   return arr
-
 }
+
 
 const calculate = (iarr) => {
   let narr = [...iarr]
